@@ -1,19 +1,24 @@
 require 'twitter'
 require 'tweetstream'
+
+YOUR_CONSUMER_KEY = ""
+YOUR_CONSUMER_SECRET = ""
+YOUR_OAUTH_TOKEN = ""
+YOUR_OAUTH_TOKEN_SECRET = ""
  
 Twitter.configure do |config|
-  config.consumer_key = ''
-  config.consumer_secret = ''
-  config.oauth_token = ''
-  config.oauth_token_secret = ''
+  config.consumer_key = YOUR_CONSUMER_KEY
+  config.consumer_secret = YOUR_CONSUMER_SECRET
+  config.oauth_token = YOUR_OAUTH_TOKEN
+  config.oauth_token_secret = YOUR_OAUTH_TOKEN_SECRET
 end
 
 
 TweetStream.configure do |config|
-  config.consumer_key = ''
-  config.consumer_secret = ''
-  config.oauth_token = ''
-  config.oauth_token_secret = ''
+  config.consumer_key = YOUR_CONSUMER_KEY
+  config.consumer_secret = YOUR_CONSUMER_SECRET
+  config.oauth_token = YOUR_OAUTH_TOKEN
+  config.oauth_token_secret = YOUR_OAUTH_TOKEN_SECRET
   config.auth_method        = :oauth
 end
 
