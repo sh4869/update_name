@@ -28,6 +28,7 @@ TweetStream::Client.new.track("@sh4869sh update_name") do |status|
  if !status.text.index("RT")
     puts "#{status.user.name}: #{status.text}"
     name = status.text.slice(22..-1)
+    user = "#{status.from_user}"
     puts name
    if status.text == "@sh4869sh update_name"
        Twitter.update_profile(:name => "4869")
@@ -42,4 +43,12 @@ TweetStream::Client.new.track("@sh4869sh update_name") do |status|
   else
     puts "RTです"
  end
+  day = Time.now
+  file = File.open("un.txt", 'a') 
+   file.write (name +" @" + user +" " + day.to_s + "\n")
+  file.close
 end
+    
+
+
+ 
