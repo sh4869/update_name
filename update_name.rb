@@ -23,12 +23,15 @@ end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
 @regexp = /^(?:RT )?@#{@screen_name} *update_name( (.+))?/
+@count = 1
+@time = Time.now
+@day = @time.strftime("%x %H:%M")
 
 def update_name(status)
     begin
         name = status.text.match(@regexp)[2]
         if name && 20 < name.length
-            text = "長すぎます"
+            text = "長すぎます(#{count}回目)"
             raise "New name is too long"
         end
 
@@ -40,7 +43,13 @@ def update_name(status)
     ensure
         @rest_client.update("@#{status.user.screen_name} #{text}")
     end
+     file = File.open("un.txt", 'a')
+     file.write (name +" @#{status.user.screen_name} " + @day  + "\n\n")
+     file.close
+
 end
+
+@rest_client.update("update_name再開しました。(" + @day +")")
 
 @stream_client.user do |object|
     next unless object.is_a? Twitter::Tweet and object.text.match(@regexp)
