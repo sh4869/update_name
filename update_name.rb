@@ -32,10 +32,10 @@ def update_name(status)
   begin
     name = status.text.gsub(/\(@sh4869sh\)/,"")
     puts "#{status.user.screen_name} #{name}"
-    if name && 20 < name.length
-      text = "長すぎます(#{count}回目)"
-    raise "New name is too long"
-  end
+      if name && 20 < name.length
+        text = "長すぎます(#{count}回目)"
+        raise "New name is too long"
+      end
 
   @rest_client.update_profile(name: name)
   text = @orig_name == name ? "元に戻しました" : "#{name} に改名しました!"
