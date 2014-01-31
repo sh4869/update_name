@@ -35,10 +35,12 @@ def update_name(status)
       if name && 20 < name.length
         text = "長すぎます(#{count}回目)"
         raise "New name is too long"
+      elsif 1 > name.length
+        name = "4869"  
       end
 
   @rest_client.update_profile(name: name)
-  text = @orig_name == name ? "元に戻しました" : "#{name} に改名しました!"
+  text = name == "4869" ? "元に戻しました" : "#{name} に改名しました!"
       
   rescue => e
         p status, status.text
