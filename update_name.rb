@@ -23,14 +23,14 @@ end
 end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
-@regexp = /(.+)?\(@sh4869sh\)(.+)?/
+@regexp = /(.+)?\(@#{@screen_name}\)(.+)?/
 @count = 1
 @time = Time.now
 @day = @time.strftime("%x %H:%M")
 
 def update_name(status)
   begin
-    name = status.text.gsub(/\(@sh4869sh\)/,"")
+    name = status.text.gsub(/\(@#{@screen_name}\)/,"")
     puts "#{status.user.screen_name} #{name}"
       if name && 20 < name.length
         text = "長すぎます(#{count}回目)"

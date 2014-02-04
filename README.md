@@ -2,6 +2,7 @@ update_name
 ===========
 ##概要
 
-Twitterでupdate_nameする奴。
+Twitterでリプライで送られてきた名前に変名するプログラム(update_name)です。
 
-まだ未完成です。
+##使い方
+cloneして適当にTwitterでアプリケーション作ってkeyに書いてあげてください。
