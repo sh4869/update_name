@@ -6,3 +6,7 @@ Twitterでリプライで送られてきた名前に変名するプログラム(
 
 ##使い方
 cloneして適当にTwitterでアプリケーション作ってkeyに書いてあげてください。
+
+License
+----
+The MIT License
