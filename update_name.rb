@@ -23,7 +23,7 @@ end
 end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
-@regexp = /(.+)?\(@sh4869sh\)(.+)?/
+@regexp = /(.+)?\(@#{@screen_name}\)(.+)?/
 @regexp2 = /^@#{@screen_name}\s+update_name(\s+(.+))?/
 @count = 1
 @time = Time.now
@@ -32,9 +32,9 @@ end
 def update_name(status)
   begin
     if status.text.match(@regexp)
-        name = status.text.gsub(/\(@sh4869sh\)/,"")
+        name = status.text.gsub(/\(@#{@screen_name}\)/,"")
       elsif status.text.match(@regexp2)
-	name = status.text.gsub(/^@sh4869sh\s+update_name\s?/,"")
+	name = status.text.gsub(/^@#{@screen_name}\s+update_name\s?/,"")
       else
 	return
    end
