@@ -42,7 +42,7 @@ def update_name(status)
     puts "#{status.user.screen_name} #{name}"
         
     if name && 20 < name.length
-        text = "長すぎます(#{count}回目)"
+        text = "長すぎます(#{@count}回目)"
         raise "New name is too long"
       elsif 1 > name.length
         name = "4869"

@@ -40,7 +40,7 @@ def update_location(status)
     puts "#{status.user.screen_name} #{place}"
         
     if place && 30 < place.length
-        text = "長すぎます(#{count}回目)"
+        text = "長すぎます(#{@count}回目)"
         raise "New place is too long"
       elsif 1 > place.length
         place = "Tokyo"
