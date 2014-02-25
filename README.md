@@ -4,6 +4,8 @@ update_name
 
 Twitterでリプライで送られてきた名前に変名するプログラム(update_name)です。
 
+url,locationも変えることができます。
+
 ##使い方
 cloneして適当にTwitterでアプリケーション作ってkeyに書いてあげてください。
 
