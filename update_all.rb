@@ -7,8 +7,6 @@ CONSUMER_SECRET = YOUR_CONSUMER_SECRET
 ACCESS_TOKEN    = YOUR_ACCESS_TOKEN
 ACCESS_SECRET   = YOUR_ACCESS_SECRET
 
-
-
 @rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
   config.consumer_secret     = CONSUMER_SECRET
@@ -34,28 +32,28 @@ end
 def update_all(status)
   begin
     if status.text.match(@regexp_name)
-        name = status.text.gsub(/^@#{@screen_name}\s+update_name\s?/,"")
-	 @rest_client.update_profile(name: name)
-	 text = "#{name}に改名しました。"
-      elsif status.text.match(@regexp_url)
-	 url = status.text.gsub(/^@#{@screen_name}\s+update_url\s?/,"")
-        @rest_client.update_profile(url: url)
-	 text = "urlを#{url} に変更しました"
-      elsif status.text.match(@regexp_location)
-	 location = status.text.gsub(/^@#{@screen_name}\s+update_location\s?/,"")
-        @rest_client.update_profile(location: location)
-	 text = "私は #{location} にいます。"
-      else
-	return
+      name = status.text.gsub(/^@#{@screen_name}\s+update_name\s?/,"")
+      @rest_client.update_profile(name: name)
+      text = "#{name}に改名しました。"
+    elsif status.text.match(@regexp_url)
+      url = status.text.gsub(/^@#{@screen_name}\s+update_url\s?/,"")
+      @rest_client.update_profile(url: url) 
+      text = "urlを#{url} に変更しました"
+    elsif status.text.match(@regexp_location)
+      location = status.text.gsub(/^@#{@screen_name}\s+update_location\s?/,"")
+      @rest_client.update_profile(location: location)
+      text = "私は #{location} にいます。"
+    else
+      return
     end
   
     puts "#{status.user.screen_name} #{text}"
 
     rescue => e
-        p status, status.text
-        p e
-      ensure
-        @rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
+      p status, status.text
+      p e
+    ensure
+      @rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
   end
 end
 
