@@ -35,43 +35,28 @@ def update_all(status)
   begin
     if status.text.match(@regexp_name)
         name = status.text.gsub(/^@#{@screen_name}\s+update_name\s?/,"")
-	hash = "name"
+	 @rest_client.update_profile(name: name)
+	 text = "#{name}に改名しました。"
       elsif status.text.match(@regexp_url)
-	url = status.text.gsub(/^@#{@screen_name}\s+update_url\s?/,"")
-	hash = "url"
+	 url = status.text.gsub(/^@#{@screen_name}\s+update_url\s?/,"")
+        @rest_client.update_profile(url: url)
+	 text = "urlを#{url} に変更しました"
       elsif status.text.match(@regexp_location)
-	location = status.text.gsub(/^@#{@screen_name}\s+update_location\s?/,"")
-	hash = "location"
+	 location = status.text.gsub(/^@#{@screen_name}\s+update_location\s?/,"")
+        @rest_client.update_profile(location: location)
+	 text = "私は #{location} にいます。"
       else
 	return
-   end
-  
-    puts "#{status.user.screen_name}"
-
-    if hash == "name" 
-        @rest_client.update_profile(name: name)
-	text = "#{name}に改名しました。"
-      elsif hash == "url"
-        @rest_client.update_profile(url: url)
-	text = "urlを#{url} に変更しました"
-      elsif hash == "location"
-        @rest_client.update_profile(location: location)
-	text = "私は #{location} にいます。"
-      else
-        return
     end
-   
+  
+    puts "#{status.user.screen_name} #{text}"
+
     rescue => e
         p status, status.text
         p e
       ensure
         @rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
   end
-  
-  #file = File.open("un.txt", "a")
-  #file.write (name +" @#{status.user.screen_name} " + @day  + "\n\n")
-  #file.close
-
 end
 
 @rest_client.update("update_all再開しました。(" + @day +")")
