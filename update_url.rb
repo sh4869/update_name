@@ -1,12 +1,7 @@
 # Coding: UTF-8
 
 require 'twitter'
-
-CONSUMER_KEY    = YOUR_CONSUMER_KEY
-CONSUMER_SECRET = YOUR_CONSUMER_SECRET
-ACCESS_TOKEN    = YOUR_ACCESS_TOKEN
-ACCESS_SECRET   = YOUR_ACCESS_SECRET
-
+require './keys.rb'
 
 
 @rest_client = Twitter::REST::Client.new do |config|
@@ -25,7 +20,7 @@ end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
 #@regexp = /(.+)?\(@sh4869sh\)(.+)?/
-@regexp = /^@#{@screen_name}\s+update_url(\s+(.+))?/
+@regexp = /^@#{@screen_name}\s+update_url\s+(.+)$/
 @count = 1
 @time = Time.now
 @day = @time.strftime("%x %H:%M")
@@ -35,7 +30,7 @@ def update_url(status)
     if status.text.match(@regexp)
      #   name = status.text.gsub(/\(@sh4869sh\)/,"")
      # elsif status.text.match(@regexp2)
-	url = status.text.gsub(/^@#{@screen_name}\s+update_url\s?/,"")
+	url = $1
       else
 	return
    end

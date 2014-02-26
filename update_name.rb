@@ -1,11 +1,7 @@
 # Coding: UTF-8
 
 require 'twitter'
-
-CONSUMER_KEY    = YOUR_CONSUMER_KEY
-CONSUMER_SECRET = YOUR_CONSUMER_SECRET
-ACCESS_TOKEN    = YOUR_ACCESS_TOKEN
-ACCESS_SECRET   = YOUR_ACCESS_SECRET
+require './keys.rb'
 
 
 @rest_client = Twitter::REST::Client.new do |config|
@@ -18,13 +14,14 @@ end
 @stream_client = Twitter::Streaming::Client.new do |config|
   config.consumer_key       = CONSUMER_KEY
   config.consumer_secret    = CONSUMER_SECRET
-  config.oauth_token        = ACCESS_TOKEN
-  config.oauth_token_secret = ACCESS_SECRET
+  config.access_token        = ACCESS_TOKEN
+  config.access_token_secret = ACCESS_SECRET
 end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
-@regexp = /(.+)?\(@#{@screen_name}\)(.+)?/
-@regexp2 = /^@#{@screen_name}\s+update_name(\s+(.+))?/
+@regexp = /^\(@#{@screen_name}\)(.+)$/
+@regexp2 = /^(.+)\(@#{@screen_name}\)$/
+@regexp3 = /^@#{@screen_name}\s+update_name\s+(.+)$/
 @count = 1
 @time = Time.now
 @day = @time.strftime("%x %H:%M")
@@ -32,9 +29,11 @@ end
 def update_name(status)
   begin
     if status.text.match(@regexp)
-        name = status.text.gsub(/\(@#{@screen_name}\)/,"")
+        name = $1
       elsif status.text.match(@regexp2)
-	name = status.text.gsub(/^@#{@screen_name}\s+update_name\s?/,"")
+        name = $1
+      elsif status.text.match(@regexp3)
+        name = $1
       else
 	return
    end

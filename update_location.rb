@@ -1,12 +1,7 @@
 # Coding: UTF-8
 
 require 'twitter'
-
-CONSUMER_KEY    = YOUR_CONSUMER_KEY
-CONSUMER_SECRET = YOUR_CONSUMER_SECRET
-ACCESS_TOKEN    = YOUR_ACCESS_TOKEN
-ACCESS_SECRET   = YOUR_ACCESS_SECRET
-
+require './keys.rb'
 
 
 @rest_client = Twitter::REST::Client.new do |config|
@@ -24,7 +19,7 @@ end
 end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
-@regexp = /^@#{@screen_name}\s+update_location(\s+(.+))?/
+@regexp = /^@#{@screen_name}\s+update_location\s+(.+)$/
 @count = 1
 @time = Time.now
 @day = @time.strftime("%x %H:%M")
@@ -32,7 +27,7 @@ end
 def update_location(status)
   begin
     if status.text.match(@regexp)
-	place = status.text.gsub(/^@#{@screen_name}\s+update_location\s?/,"")
+	place = $1
       else
 	return
    end
