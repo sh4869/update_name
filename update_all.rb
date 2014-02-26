@@ -1,11 +1,8 @@
 # Coding: UTF-8
 
 require 'twitter'
+require './keys.rb'
 
-CONSUMER_KEY    = YOUR_CONSUMER_KEY
-CONSUMER_SECRET = YOUR_CONSUMER_SECRET
-ACCESS_TOKEN    = YOUR_ACCESS_TOKEN
-ACCESS_SECRET   = YOUR_ACCESS_SECRET
 
 @rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
@@ -22,9 +19,9 @@ end
 end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
-@regexp_name = /^@#{@screen_name}\s+update_name(\s+(.+))?/
-@regexp_url = /^@#{@screen_name}\s+update_url(\s+(.+))?/
-@regexp_location = /^@#{@screen_name}\s+update_location(\s+(.+))?/
+@regexp_name = /^@#{@screen_name}\s+update_name\s+(.+)$/
+@regexp_url = /^@#{@screen_name}\s+update_url\s+(.+)$/
+@regexp_location = /^@#{@screen_name}\s+update_location\s+(.+)$/
 @count = 1
 @time = Time.now
 @day = @time.strftime("%x %H:%M")
@@ -32,15 +29,15 @@ end
 def update_all(status)
   begin
     if status.text.match(@regexp_name)
-      name = status.text.gsub(/^@#{@screen_name}\s+update_name\s?/,"")
+      name = $1
       @rest_client.update_profile(name: name)
       text = "#{name}に改名しました。"
     elsif status.text.match(@regexp_url)
-      url = status.text.gsub(/^@#{@screen_name}\s+update_url\s?/,"")
+      url = $1
       @rest_client.update_profile(url: url) 
       text = "urlを#{url} に変更しました"
     elsif status.text.match(@regexp_location)
-      location = status.text.gsub(/^@#{@screen_name}\s+update_location\s?/,"")
+      location = $1
       @rest_client.update_profile(location: location)
       text = "私は #{location} にいます。"
     else
