@@ -59,7 +59,7 @@ def update_location(status)
 
 end
 
-@rest_client.update("@null update_location再開しました。(" + @day +")")
+@rest_client.update("update_location再開しました。(" + @day +")")
 
 @stream_client.user do |object|
   next unless object.is_a? Twitter::Tweet and object.text.match(@regexp) 
