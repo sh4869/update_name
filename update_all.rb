@@ -4,7 +4,7 @@ require 'twitter'
 require './keys.rb'
 
 
-@rest_client = Twitter::REST::Client.new do |config|
+rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
   config.consumer_secret     = CONSUMER_SECRET
   config.access_token        = ACCESS_TOKEN
@@ -29,19 +29,60 @@ end
 def update_all(status)
   begin
     if status.text.match(@regexp_name)
+      
       name = $1
-      @rest_client.update_profile(name: name)
-      text = "#{name}に改名しました。"
+
+      if name && 20 < name.length
+        text = "長すぎます(#{@count}回目)"
+        raise "New name is too long"
+        @count = @count + 1
+      elsif 1 > name.length
+        name = "4869"
+        @rest_client.update_profile(name: name)
+        text = "#{name}に改名しました。"
+      else
+        @rest_client.update_profile(name: name)
+        text = "#{name}に改名しました。"
+      end 
+
     elsif status.text.match(@regexp_url)
+      
       url = $1
-      @rest_client.update_profile(url: url) 
-      text = "urlを#{url} に変更しました"
+
+      if url && 100  < url.length
+        text = "長すぎます(#{@count}回目)"
+        raise "New URL is too long"
+        @count = @count  + 1
+      elsif url.length  < 1
+        url = "http://sh4869.net"
+        @rest_client.update_profile(url: url) 
+        text = "urlを#{url} に変更しました"
+      else
+        @rest_client.update_profile(url: url) 
+        text = "urlを#{url} に変更しました"
+      end
+
     elsif status.text.match(@regexp_location)
+      
       location = $1
-      @rest_client.update_profile(location: location)
-      text = "私は #{location} にいます。"
+      
+      if location && 30 < location.length
+        text = "長すぎます(#{@count}回目)"
+        raise "New location is too long"
+        @count = @count + 1
+      elsif location.length < 1
+        location = "Tokyo"
+        @rest_client.update_profile(location: location)
+        text = "私は #{location} にいます。"
+      else
+        @rest_client.update_profile(location: location)
+        text = "私は #{location} にいます。" 
+      end
+
     else
+      
       return
+
     end
   
     puts "#{status.user.screen_name} #{text}"
@@ -65,4 +106,3 @@ end
     puts "RTです"
   end
 end
-
