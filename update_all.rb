@@ -29,62 +29,54 @@ end
 
 def update_all(status)
   begin
-    if status.text.match(@regexp_name) 
-      name = $1
-      if name && 20 < name.length
-        text = "長すぎます(#{@count}回目)"
-        raise "New name is too long"
-        @count = @count + 1
-      elsif 1 > name.length
-        name = "4869"
-        @rest_client.update_profile(name: name)
-        text = "#{name}に戻しました。"
-      else
-        @rest_client.update_profile(name: name)
-        text = "#{name}に改名しました。"
+    if status.text.match(/(#{@regexp_name}|#{@regexp_name_2})/) 
+      if status.text.match(@regexp_name)
+        name = $1
+      elsif status.text.match(@regexp_name_2)  
+        name = status.text.gsub(/\(@#{@screen_name}\)/,"")      
       end
-    elsif status.text.match(@regexp_name_2)  
-      name = status.text.gsub(/\(@#{@screen_name}\)/,"")      
+      
       if name && 20 < name.length
         text = "長過ぎます(#{@count}回目)"
         raise "New name is too long"
-  @count = @count + 1
-      elsif 1 > name.length
-  name = "4869"
-  @rest_client.update_profile(name: name)
-  text = "#{name}に戻しました。"
-      else 
-  @rest_client.update_profile(name: name)
-  text = "#{name}に改名しました"
+        @count = @count + 1
+      else
+        if 1 > name.length
+          name = "4869"
+        end
+       	@rest_client.update_profile(name: name)
+        text = "#{name}に改名しました"
       end
+    
     elsif status.text.match(@regexp_url)
+    
       url = $1
       if url && 100  < url.length
         text = "長すぎます(#{@count}回目)"
         raise "New URL is too long"
         @count = @count  + 1
-      elsif url.length  < 1
-        url = "http://sh4869.net"
-        @rest_client.update_profile(url: url) 
-        text = "urlを#{url} に変更しました"
       else
+        if url.length  < 1
+          url = "http://sh4869.net"
+	end
         @rest_client.update_profile(url: url) 
         text = "urlを#{url} に変更しました"
       end
+
     elsif status.text.match(@regexp_location)
       location = $1
       if location && 30 < location.length
         text = "長すぎます(#{@count}回目)"
         raise "New location is too long"
         @count = @count + 1
-      elsif location.length < 1
-        location = "Tokyo"
-        @rest_client.update_profile(location: location)
-        text = "私は #{location} にいます。"
       else
-        @rest_client.update_profile(location: location)
+        if location.length < 1
+          location = "Tokyo"
+	end
+	@rest_client.update_profile(location: location)
         text = "私は #{location} にいます。" 
       end
+    
     else
       return
     end
