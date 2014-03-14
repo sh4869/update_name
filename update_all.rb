@@ -3,7 +3,6 @@
 require 'twitter'
 require './keys.rb'
 
-
 @rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
   config.consumer_secret     = CONSUMER_SECRET
@@ -89,6 +88,9 @@ def update_all(status)
     ensure
       @rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
   end
+  file = File.open("un.txt", "a")
+  file.write (name +" @#{status.user.screen_name} " + @day  + "\n\n")
+  file.close  
 end
 
 @rest_client.update("update_all再開しました。(" + @day +")")
