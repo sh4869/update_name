@@ -9,10 +9,13 @@ url,locationも変えることができます。
 ##使い方
 
 ```
-$ruby update_all.rb
+$ git clone https://github.com/sh4869/update_name.git
+$ cd update_name
+$ bundle install
+$ bundle exec ruby update_all.rb
 ```
 
-最初は認証をする必要があります。
+最初はoauth認証をする必要があります。
 
 License
 ----
