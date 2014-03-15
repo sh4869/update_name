@@ -7,7 +7,12 @@ Twitterでリプライで送られてきた名前に変名するプログラム(
 url,locationも変えることができます。
 
 ##使い方
-cloneして適当にTwitterでアプリケーション作ってkeyに書いてあげてください。
+
+```
+$ruby update_all.rb
+```
+
+最初は認証をする必要があります。
 
 License
 ----
