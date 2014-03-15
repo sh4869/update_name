@@ -1,6 +1,41 @@
 # Coding: UTF-8
 require 'twitter'
+require 'oauth'
+require 'oauth/consumer'
 require './keys.rb'
+
+SourcePath = File.expand_path('../', __FILE__)
+TokenFile = "#{SourcePath}/token"
+
+def oauth_first
+  @consumer = OAuth::Consumer.new(CONSUMER_KEY ,CONSUMER_SECRET,{
+    :site=>"https://api.twitter.com"
+  })
+
+  @request_token = @consumer.get_request_token
+
+  puts "Please access this URL: #{@request_token.authorize_url}"
+  puts "and get the Pin code."
+
+  print "Enter your Pin code:"
+  pin  = gets.chomp
+
+  @access_token = @request_token.get_access_token(:oauth_verifier => pin)
+
+  open(TokenFile, "a" ){|f| f.write("#{@access_token.token}\n")}
+  open(TokenFile, "a" ){|f| f.write("#{@access_token.secret}\n")}
+end
+
+unless File::exist?(TokenFile)
+  oauth_first
+end
+
+open(TokenFile){ |file|
+  ACCESS_TOKEN = file.readlines.values_at(0)[0].gsub("\n","")
+}
+open(TokenFile){ |file|
+  ACCESS_SECRET = file.readlines.values_at(1)[0].gsub("\n","")
+}  
 
 @rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
@@ -21,9 +56,10 @@ end
 @regexp_name_2 = /(.+)?\(@#{@screen_name}\)(.+)?/ 
 @regexp_url = /^@#{@screen_name}\s+update_url\s+(.+)$/
 @regexp_location = /^@#{@screen_name}\s+update_location\s+(.+)$/
-@count = 1
+@count = 1  #連投によるエラーを避けるためにあります。
 @time = Time.now
 @day = @time.strftime("%x %H:%M")
+
 
 def update_all(status)
   begin
@@ -39,7 +75,7 @@ def update_all(status)
         raise "New name is too long"
         @count = @count + 1
       else   
-        if 1 > name.length  #名前がない(0文字)場合
+        if name.length < 1  #名前がない(0文字)場合
           name = "4869"
         end
        	@rest_client.update_profile(name: name)

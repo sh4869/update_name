@@ -3,7 +3,6 @@
 require 'twitter'
 require './keys.rb'
 
-
 @rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
   config.consumer_secret     = CONSUMER_SECRET
