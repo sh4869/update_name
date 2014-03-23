@@ -74,12 +74,12 @@ def update_all(status)
 	  url = $1
 	  hash = "url"
 	elsif status.text.match(@regexp_location)
-      location = $1
+	  location = $1
 	  hash = "location"
-    else
+	else
 	  return
 	end
-	
+
 	case hash
 	when "name"
 	  if 1 >  name.length || 20 < name.length  #名前が20文字以上の場合
