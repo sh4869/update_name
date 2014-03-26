@@ -88,6 +88,7 @@ def update_all(status)
 	  else 
 		text = "#{name}に改名しました。"
 	  end
+	  @rest_client.update_profile(name: name)
 	when "url"
 	  if 1 > url.length || 100  < url.length  #URLが100文字以上の場合  
 		text = "Error:New URL is too short or too long.(#{@day})"
@@ -95,6 +96,7 @@ def update_all(status)
 	  else
 		text = "urlを#{url} に変更しました"
 	  end
+	  @rest_client.update_profile(url: url)
 	when "location"
 	  if 1 > location.length || 30 < location.length  #場所が30文字以上の場合
 		text = "Error:New location is too short or too long.(#{@day})"	
@@ -102,28 +104,20 @@ def update_all(status)
 	  else
 		text = "私は #{location} にいます。" 
 	  end
+	  @rest_client.update_profile(location: location)
 	else 
 	  puts "そんなhash存在しません。"
 	end
-
-	case hash
-	when "name"
-	  @rest_client.update_profile(name: name)
-	when "url"
-	  @rest_client.update_profile(url: url)
-	when "location"
-	  @rest_client.update_profile(location: location)
-	end
-
-	puts "#{status.user.screen_name} #{text}"
 
 	@rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
 
   rescue Twitter::Error::RequestTimeout
 	sleep(10)
 	retry
-  ensure
+  else
 	puts "update you!"
+  ensure
+	puts "#{status.user.screen_name} #{text}"
   end
   #ファイルに書きこんで記録します
   file = File.open("un.txt", "a")
