@@ -118,11 +118,11 @@ def update_all(status)
 	puts "update you!"
   ensure
 	puts "#{status.user.screen_name} #{text}"
+	#ファイルに書きこんで記録します
+	file = File.open("un.txt", "a")
+	file.write ("@#{status.user.screen_name}" + @day  + "\n\n")
+	file.close  
   end
-  #ファイルに書きこんで記録します
-  file = File.open("un.txt", "a")
-  file.write ("@#{status.user.screen_name}" + @day  + "\n\n")
-  file.close  
 end
 
 @rest_client.update("update_all再開しました。(" + @day +")")
