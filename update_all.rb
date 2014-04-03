@@ -58,6 +58,7 @@ end
 @regexp_name_2 = /(.+)?\(@#{@screen_name}\)(.+)?/ 
 @regexp_url = /^@#{@screen_name}\s+update_url\s+(.+)$/
 @regexp_location = /^@#{@screen_name}\s+update_location\s+(.+)$/
+@regexp = /(#{@regexp_name}|#{@regexp_name_2}|#{@regexp_url}|#{@regexp_location})/
 @time = Time.now
 @day = @time.strftime("%x %H:%M")
 
@@ -128,7 +129,7 @@ end
 @rest_client.update("update_all再開しました。(" + @day +")")
 
 @stream_client.user do |object|
-  next unless object.is_a? Twitter::Tweet and object.text.match(/(#{@regexp_name}|#{@regexp_name_2}|#{@regexp_url}|#{@regexp_location})/) 
+  next unless object.is_a? Twitter::Tweet and object.text.match(@regexp) 
 
   unless object.text.start_with? "RT" #当てはまったツイートがRTから始まっていなかった場合
 	update_all(object)
