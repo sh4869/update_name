@@ -4,7 +4,6 @@ require 'oauth'
 require 'oauth/consumer'
 require './keys.rb'
 
-
 SourcePath = File.expand_path('../', __FILE__)
 TokenFile = "#{SourcePath}/token"
 
@@ -15,7 +14,8 @@ def oauth_first
 
   @request_token = @consumer.get_request_token
 
-  puts "Please access this URL: #{@request_token.authorize_url}"
+  puts "Please access this URL"
+  puts ":#{@request_token.authorize_url}"
   puts "and get the Pin code."
 
   print "Enter your Pin code:"
