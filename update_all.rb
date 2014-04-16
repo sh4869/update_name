@@ -113,8 +113,11 @@ def update_all(status)
 	@rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
 
   rescue Twitter::Error::RequestTimeout
-	sleep(10)
-	retry
+	begin 
+	  sleep(10)
+	  retry
+	rescue Twitter::Error
+	  @rest_client.update("@#{status.user.screen_name} エラーが発生しています。じかんをおいてお試しください。", :in_reply_to_status_id => status.id)
   else
 	puts "update you!"
   ensure
