@@ -1,4 +1,4 @@
-a Coding: UTF-8
+# Coding: UTF-8
 require 'twitter'
 require 'oauth'
 require 'oauth/consumer'
