@@ -1,4 +1,4 @@
-# Coding: UTF-8
+a Coding: UTF-8
 require 'twitter'
 require 'oauth'
 require 'oauth/consumer'
@@ -112,13 +112,9 @@ def update_all(status)
 
 	@rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
 
-  rescue Twitter::Error::RequestTimeout
-	begin 
-	  sleep(10)
-	  retry
-	rescue Twitter::Error
-	  @rest_client.update("@#{status.user.screen_name} エラーが発生しています。じかんをおいてお試しください。", :in_reply_to_status_id => status.id)
-  else
+  rescue Twitter::Error::RequestTimeout 
+	retry
+  else 
 	puts "update you!"
   ensure
 	puts "#{status.user.screen_name} #{text}"
