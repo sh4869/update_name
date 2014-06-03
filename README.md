@@ -18,6 +18,8 @@ $ bundle exec ruby update_all.rb
 
 最初はoauth認証をする必要があります。
 
-License
-----
+分からないことがありましたらTwitter:sh4869shまで。
+
+##License
+
 The MIT License
