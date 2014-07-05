@@ -65,24 +65,12 @@ end
 
 def update_all(status)
   begin
-	if status.text.match(@regexp_name)
-	  name = $1  
-	  hash = "name"
-	elsif status.text.match(@regexp_name_2)  
-	  name = status.text.gsub(/\(@#{@screen_name}\)/,"")     
-	  hash = "name" 
-	elsif status.text.match(@regexp_url)
-	  url = $1
-	  hash = "url"
-	elsif status.text.match(@regexp_location)
-	  location = $1
-	  hash = "location"
-	else
-	  return
-	end
-
-	case hash
-	when "name"
+	if status.text.match(@regexp_name) || status.text.match(@regexp_name_2) 
+	  if status.text.match(@regexp_name)
+		name = $1  
+	  elsif   status.text.match(@regexp_name_2) 
+		name = status.text.gsub(/\(@#{@screen_name}\)/,"")  
+	  end
 	  if 1 >  name.length || 20 < name.length  #名前が20文字以上の場合
 		text = "Error:New name is too short or too long.(#{@day})"
 		name = "4869"
@@ -90,7 +78,9 @@ def update_all(status)
 		text = "#{name}に改名しました。"
 	  end
 	  @rest_client.update_profile(name: name)
-	when "url"
+
+	elsif status.text.match(@regexp_url)
+	  url = $1
 	  if 1 > url.length || 100  < url.length  #URLが100文字以上の場合  
 		text = "Error:New URL is too short or too long.(#{@day})"
 		url = "http://sh4869.net"
@@ -98,7 +88,9 @@ def update_all(status)
 		text = "urlを#{url} に変更しました"
 	  end
 	  @rest_client.update_profile(url: url)
-	when "location"
+
+	elsif status.text.match(@regexp_location)
+	  location = $1
 	  if 1 > location.length || 30 < location.length  #場所が30文字以上の場合
 		text = "Error:New location is too short or too long.(#{@day})"	
 		location = "Tokyo"
@@ -106,8 +98,7 @@ def update_all(status)
 		text = "私は #{location} にいます。" 
 	  end
 	  @rest_client.update_profile(location: location)
-	else 
-	  puts "そんなhash存在しません。"
+
 	end
 
 	@rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
