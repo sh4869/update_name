@@ -7,7 +7,7 @@ Twitterでリプライで送られてきた名前に変名するプログラム(
 
 url,locationも変えることができます。
 
-###使い方
+##How to Use
 
 推奨環境はLinux系OSです。bundleとrubyが必要となります。
 
