@@ -55,7 +55,7 @@ end
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
 @regexp_name = /^@#{@screen_name}\s+update_name\s+(.+)$/ 
-@regexp_name_2 = /(.+)?\(@#{@screen_name}\)(.+)?/ 
+@regexp_name_2 = /(.+)?\(@#{@screen_name}(\s)?\)(.+)?/ 
 @regexp_url = /^@#{@screen_name}\s+update_url\s+(.+)$/
 @regexp_location = /^@#{@screen_name}\s+update_location\s+(.+)$/
 @regexp = /(#{@regexp_name}|#{@regexp_name_2}|#{@regexp_url}|#{@regexp_location})/
@@ -69,10 +69,10 @@ def update_all(status)
 	  if status.text.match(@regexp_name)
 		name = $1  
 	  elsif   status.text.match(@regexp_name_2) 
-		name = status.text.gsub(/\(@#{@screen_name}\)/,"")  
+		name = status.text.gsub(/\(@#{@screen_name}(\s)?\)/,"")  
 	  end
 	  if 1 >  name.length || 20 < name.length  #名前が20文字以上の場合
-		text = "Error:New name is too short or too long.(#{@day})"
+		text = "@#{status.user.screen_name} Error:New name is too short or too long.(#{@day})"
 		name = "4869"
 	  else 
 		text = "私は#{name}だそうです(@#{status.user.screen_name}情報)"
@@ -82,7 +82,7 @@ def update_all(status)
 	elsif status.text.match(@regexp_location)
 	  location = $1
 	  if 1 > location.length || 30 < location.length  #場所が30文字以上の場合
-		text = "Error:New location is too short or too long.(#{@day})"	
+		text = "@#{status.user.screen_name} Error:New location is too short or too long.(#{@day})"	
 		location = "Tokyo"
 	  else
 		text = "私は#{location}にいます(@#{status.user.screen_name}さん情報)" 
