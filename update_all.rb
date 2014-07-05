@@ -75,19 +75,9 @@ def update_all(status)
 		text = "Error:New name is too short or too long.(#{@day})"
 		name = "4869"
 	  else 
-		text = "#{name}に改名しました。"
+		text = "私は#{name}だそうです(@#{status.user.screen_name}情報)"
 	  end
 	  @rest_client.update_profile(name: name)
-
-	elsif status.text.match(@regexp_url)
-	  url = $1
-	  if 1 > url.length || 100  < url.length  #URLが100文字以上の場合  
-		text = "Error:New URL is too short or too long.(#{@day})"
-		url = "http://sh4869.net"
-	  else
-		text = "urlを#{url} に変更しました"
-	  end
-	  @rest_client.update_profile(url: url)
 
 	elsif status.text.match(@regexp_location)
 	  location = $1
@@ -95,13 +85,13 @@ def update_all(status)
 		text = "Error:New location is too short or too long.(#{@day})"	
 		location = "Tokyo"
 	  else
-		text = "私は #{location} にいます。" 
+		text = "私は#{location}にいます(@#{status.user.screen_name}さん情報)" 
 	  end
 	  @rest_client.update_profile(location: location)
 
 	end
 
-	@rest_client.update("@#{status.user.screen_name} #{text}", :in_reply_to_status_id => status.id)
+	@rest_client.update("#{text}", :in_reply_to_status_id => status.id)
 
   rescue Twitter::Error::RequestTimeout 
 	retry
