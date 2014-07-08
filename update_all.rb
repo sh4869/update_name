@@ -105,8 +105,8 @@ def update_all(status)
 	file.close  
   end
 end
-
 @rest_client.update("update_all再開しました。(" + @day +")")
+puts "start update_name"
 
 @stream_client.user do |object|
   next unless object.is_a? Twitter::Tweet and object.text.match(@regexp) 
@@ -117,4 +117,3 @@ end
 	puts "RTです"
   end
 end
-
