@@ -34,20 +34,6 @@ class Oauth
   end
 end
 
-Oauth.oauth_check
-
-open($TokenFile){ |file|
-  ACCESS_TOKEN = file.readlines.values_at(0)[0].gsub("\n","")
-}
-open($TokenFile){ |file|
-  ACCESS_SECRET = file.readlines.values_at(1)[0].gsub("\n","")
-}  
-
-$consumer_key = CONSUMER_KEY
-$consumer_secret = CONSUMER_SECRET
-$access_token = ACCESS_TOKEN
-$access_secret = ACCESS_SECRET
-
 class Update
   def initialize
 	@rest_client = Twitter::REST::Client.new do |config|
@@ -130,6 +116,20 @@ class Update
 	end
   end
 end
+
+Oauth.oauth_check
+
+open($TokenFile){ |file|
+  ACCESS_TOKEN = file.readlines.values_at(0)[0].gsub("\n","")
+}
+open($TokenFile){ |file|
+  ACCESS_SECRET = file.readlines.values_at(1)[0].gsub("\n","")
+}  
+
+$consumer_key = CONSUMER_KEY
+$consumer_secret = CONSUMER_SECRET
+$access_token = ACCESS_TOKEN
+$access_secret = ACCESS_SECRET
 
 update = Update.new
 update.update_start
