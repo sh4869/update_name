@@ -5,38 +5,43 @@ require 'oauth/consumer'
 require './keys.rb'
 
 SourcePath = File.expand_path('../', __FILE__)
-TokenFile = "#{SourcePath}/token"
+$TokenFile = "#{SourcePath}/token"
 
-def oauth_first
-  @consumer = OAuth::Consumer.new(CONSUMER_KEY ,CONSUMER_SECRET,{
-	:site=>"https://api.twitter.com"
-  })
+class Oauth
+  def oauth_first
+	@consumer = OAuth::Consumer.new(CONSUMER_KEY ,CONSUMER_SECRET,{
+	  :site=>"https://api.twitter.com"
+	})
 
-  @request_token = @consumer.get_request_token
+	@request_token = @consumer.get_request_token
 
-  puts "Please access this URL"
-  puts ":#{@request_token.authorize_url}"
-  puts "and get the Pin code."
+	puts "Please access this URL"
+	puts ":#{@request_token.authorize_url}"
+	puts "and get the Pin code."
 
-  print "Enter your Pin code:"
-  pin  = gets.chomp
+	print "Enter your Pin code:"
+	pin  = gets.chomp
 
-  @access_token = @request_token.get_access_token(:oauth_verifier => pin)
+	@access_token = @request_token.get_access_token(:oauth_verifier => pin)
 
-  open(TokenFile, "a" ){|f| f.write("#{@access_token.token}\n")}
-  open(TokenFile, "a" ){|f| f.write("#{@access_token.secret}\n")}
+	open($TokenFile, "a" ){|f| f.write("#{@access_token.token}\n")}
+	open($TokenFile, "a" ){|f| f.write("#{@access_token.secret}\n")}
+  end
+  def Oauth.oauth_check
+	unless File::exist?($TokenFile)
+	  oauth_first
+	end
+  end
 end
-
-unless File::exist?(TokenFile)
-  oauth_first
-end
-
-open(TokenFile){ |file|
+open($TokenFile){ |file|
   ACCESS_TOKEN = file.readlines.values_at(0)[0].gsub("\n","")
 }
-open(TokenFile){ |file|
+open($TokenFile){ |file|
   ACCESS_SECRET = file.readlines.values_at(1)[0].gsub("\n","")
 }  
+
+
+Oauth.oauth_check
 
 @rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
@@ -51,7 +56,6 @@ end
   config.access_token        = ACCESS_TOKEN
   config.access_token_secret = ACCESS_SECRET
 end
-
 
 @orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
 @regexp_name = /^@#{@screen_name}\s+update_name\s+(.+)$/ 
@@ -105,7 +109,8 @@ def update_all(status)
 	file.close  
   end
 end
-@rest_client.update("update_all再開しました。(" + @day +")")
+
+@rest_client.update("update_all再開しました。(#{@day})")
 puts "start update_name"
 
 @stream_client.user do |object|
@@ -117,3 +122,4 @@ puts "start update_name"
 	puts "RTです"
   end
 end
+
