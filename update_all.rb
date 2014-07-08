@@ -33,15 +33,13 @@ class Oauth
 	end
   end
 end
+Oauth.oauth_check
 open($TokenFile){ |file|
   ACCESS_TOKEN = file.readlines.values_at(0)[0].gsub("\n","")
 }
 open($TokenFile){ |file|
   ACCESS_SECRET = file.readlines.values_at(1)[0].gsub("\n","")
 }  
-
-
-Oauth.oauth_check
 
 @rest_client = Twitter::REST::Client.new do |config|
   config.consumer_key        = CONSUMER_KEY
