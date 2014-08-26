@@ -8,7 +8,7 @@ SourcePath = File.expand_path('../', __FILE__)
 $TokenFile = "#{SourcePath}/token"
 
 class Oauth
-  def oauth_first
+  def Oauth.oauth_first
 	@consumer = OAuth::Consumer.new(CONSUMER_KEY ,CONSUMER_SECRET,{
 	  :site=>"https://api.twitter.com"
 	})
