@@ -53,9 +53,8 @@ class Update
 		@orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
 		@regexp_name = /^@#{@screen_name}\s+update_name\s+(.+)$/ 
 		@regexp_name_2 = /(.+)?\(@#{@screen_name}(\s)?\)(.+)?/ 
-		@regexp_url = /^@#{@screen_name}\s+update_url\s+(.+)$/
 		@regexp_location = /^@#{@screen_name}\s+update_location\s+(.+)$/
-		@regexp = /(#{@regexp_name}|#{@regexp_name_2}|#{@regexp_url}|#{@regexp_location})/
+		@regexp = /(#{@regexp_name}|#{@regexp_name_2}|#{@regexp_location})/
 		@time = Timenow
 		@day = @time.strftime("%x %H:%M")
 	end
