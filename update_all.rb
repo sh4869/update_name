@@ -43,12 +43,12 @@ class Update
 			config.access_token        = $access_token
 			config.access_token_secret = $access_secret
 		end
-		@orig_name, @screen_name = [:name, :screen_name].map{|x| @rest_client.user.send(x) }
+		@orig_name, @screen_name,@orig_location = [:name, :screen_name, :location].map{|x| @rest_client.user.send(x) }
 		@regexp_name = /^@#{@screen_name}\s+update_name\s+(.+)$/ 
 		@regexp_name_2 = /(.+)?\(@#{@screen_name}(\s)?\)(.+)?/ 
 		@regexp_location = /^@#{@screen_name}\s+update_location\s+(.+)$/
 		@regexp = /(#{@regexp_name}|#{@regexp_name_2}|#{@regexp_location})/
-		@time = Timenow
+		@time = Time.now
 		@day = @time.strftime("%x %H:%M")
 	end
 	def update_all(status)
@@ -60,8 +60,10 @@ class Update
 					name = status.text.gsub(/\(@#{@screen_name}(\s)?\)/,"")  
 				end
 				if 1 >  name.length || 20 < name.length  #名前が20文字以上の場合
+					@time = Time.now
+					@day = @time.strftime("%x %H:%M")
 					text = "@#{status.user.screen_name} Error:New name is too short or too long.(#{@day})"
-					name = "4869"
+					name = @orig_name
 				else 
 					text = "私は#{name}だそうです(@#{status.user.screen_name}情報)"
 				end
@@ -69,9 +71,13 @@ class Update
 			elsif status.text.match(@regexp_location)
 				location = $1
 				if 1 > location.length || 30 < location.length  #場所が30文字以上の場合
+					@time = Time.now
+					@day = @time.strftime("%x %H:%M")
 					text = "@#{status.user.screen_name} Error:New location is too short or too long.(#{@day})"	
-					location = "Tokyo"
+					location = @orig_location
 				else
+					@time = Time.now
+					@day = @time.strftime("%x %H:%M")
 					text = "私は#{location}にいます(@#{status.user.screen_name}さん情報)" 
 				end
 				@rest_client.update_profile(location: location)
@@ -84,13 +90,15 @@ class Update
 		ensure
 			puts "#{status.user.screen_name} #{text}"
 			#ファイルに書きこんで記録します
+			@time = Time.now
+			@day = @time.strftime("%x %H:%M")
 			file = File.open("un.txt", "a")
-			file.write ("@#{status.user.screen_name}" + @day  + "\n\n")
+			file.write ("@#{status.user.screen_name} " + @day  + "\n\n")
 			file.close  
 		end
 	end
 	def update_start
-		@rest_client.update("update_all再開しました。(#{@day})")
+		@rest_client.update("update_allを開始しました(#{@day})")
 		puts "start update_name"
 		@stream_client.user do |object|
 			next unless object.is_a? Twitter::Tweet and object.text.match(@regexp) 
